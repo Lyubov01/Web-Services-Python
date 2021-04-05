@@ -161,9 +161,6 @@ def build_bridge(path, start_page, end_page):
     return bridge
 
 
-
-
-
 def get_statistics(path, start_page, end_page):
     """собирает статистику со страниц, возвращает словарь, где ключ - название страницы,
     значение - список со статистикой страницы"""
@@ -171,7 +168,10 @@ def get_statistics(path, start_page, end_page):
     # получаем список страниц, с которых необходимо собрать статистику
     pages = build_bridge(path, start_page, end_page)
     # напишите вашу реализацию логики по сбору статистики здесь
-    
+    statistic = {}
+    for page in pages:
+        statistic[page] = parse(os.path.join(path,page))
+
     return statistic
 
 
@@ -205,7 +205,8 @@ class TestParse(unittest.TestCase):
 if __name__ == '__main__':
     # unittest.main()
     result = build_bridge('wiki/', 'The_New_York_Times', 'Stone_Age')
+    result1 = get_statistics('wiki/', 'The_New_York_Times', "Binyamina_train_station_suicide_bombing")
     print(result)
-
+    print(result1)
     # print('Stone_Age' in os.listdir('wiki'))
     # print(create_tree('wiki', None, None))
