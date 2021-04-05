@@ -112,34 +112,7 @@ def create_tree(path):
             files[file].append(ref)
     return files
 
-    # files = dict.fromkeys(os.listdir(path))
-    # for file in files:
-    #    files[file] = []
-    #    with open(os.path.join(path, file), 'r', encoding='utf-8') as f:
-    #        refs_list = re.findall(r"(?<=/wiki/)[\w()]+", f.read())
-    #    for ref in set(refs_list):
-    #        try:
-    #            open(os.path.join(path, ref), 'r')
-    #            files[file].append(ref)
-    #        except FileNotFoundError:
-    #            continue
-    #
 
-    # d = {}
-    # first_file = os.path.join(path, start_page)
-    # last_file = os.path.join(path, end_page)
-    # with open(first_file, 'r') as first:
-    #    links = set(re.findall(r"(?<=/wiki/)[\w()]+", first.read()))
-    # for link in links:
-    #    try:
-    #        with open(os.path.join(path, link), 'r') as link_file:
-    #            d[link] = set(re.findall(r"(?<=/wiki/)[\w()]+", link_file.read()))
-    #    except FileNotFoundError:
-    #        continue
-
-
-#
-# return links
 class Queue:
     def __init__(self):
         self.items = []
@@ -157,6 +130,37 @@ class Queue:
             return deq_item
 
 
+def build_bridge(path, start_page, end_page):
+    """возвращает список страниц, по которым можно перейти по ссылкам со start_page на
+    end_page, начальная и конечная страницы включаются в результирующий список"""
+
+    # напишите вашу реализацию логики по вычисления кратчайшего пути здесь
+    files = create_tree(path)
+    level = dict.fromkeys(files, -1)
+    level[start_page] = 0
+    queue = Queue()
+    queue.enqueue(start_page)
+
+    while not queue.isEmpty():
+        v = queue.dequeue()
+        for w in files[v]:
+            if level[w] == -1:
+                queue.enqueue(w)
+                level[w] = level[v] + 1
+
+    bridge = [end_page]
+    pos = level[end_page]
+
+    while pos != 0:
+        for lv in level.keys():
+            if level[lv] != pos - 1 or bridge[len(bridge) - 1] not in files[lv]:
+                continue
+            bridge.append(lv)
+            pos -= 1
+            break
+    return bridge
+
+
 
 
 
@@ -167,7 +171,7 @@ def get_statistics(path, start_page, end_page):
     # получаем список страниц, с которых необходимо собрать статистику
     pages = build_bridge(path, start_page, end_page)
     # напишите вашу реализацию логики по сбору статистики здесь
-
+    
     return statistic
 
 
