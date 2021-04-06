@@ -11,7 +11,7 @@ programming_language). В статье Stone_Age есть ссылка на Brai
 programming_language) и это кратчайший путь от Stone_Age до Python_(programming_language). Ваша задача — найти самый
 короткий путь (гарантируется, что существует только один путь минимальной длины), а затем с помощью функции parse из
 предыдущего задания собрать статистику по всем статьям в найденном пути. """
-from parser_bs import Parser
+from parser_bs import parse
 import re
 import os
 
@@ -83,6 +83,18 @@ def build_bridge(path, start_page, end_page):
     return bridge
 
 
+def get_statistics(path, start_page, end_page):
+    """собирает статистику со страниц, возвращает словарь, где ключ - название страницы,
+    значение - список со статистикой страницы"""
+
+    # получаем список страниц, с которых необходимо собрать статистику
+    pages = build_bridge(path, start_page, end_page)
+    # напишите вашу реализацию логики по сбору статистики здесь
+    statistic = {}
+    for page in pages:
+        statistic[page] = parse(os.path.join(path,page))
+
+    return statistic
 if __name__ == '__main__':
     result = build_bridge('wiki/', 'The_New_York_Times', 'Stone_Age')
     print(result)
