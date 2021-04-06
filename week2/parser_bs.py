@@ -53,13 +53,11 @@ class Parser:
         букве E, T или C. Например: <h1>End</h1> или <h5><span>Contents</span></h5>, но не <h1>About</h1> и не
         <h2>end</h2> и не <h3><span>1</span><span>End</span></h3> """
         counter = 0
-        tags = dict(zip([f"h{i}" for i in range(1, 7)], [self.body(f"h{i}") for i in range(1, 7)]))
-        for head in tags:
-            for tag in tags[head]:
-                for t in tag.children:
-                    t = str(t.string)
-                    if t[0] in 'ETC':
-                        counter += 1
+        headers_list = self.body.find_all(name=re.compile('h[1-6]'))
+
+        for header_current in headers_list:
+            tag_string = header_current.get_text()
+            counter += 1 if re.search('^[ETC]', tag_string) else 0
         return counter
 
     @staticmethod
@@ -197,16 +195,17 @@ class TestParse(unittest.TestCase):
             ('wiki/Artificial_intelligence', [8, 19, 13, 198]),
             ('wiki/Python_(programming_language)', [2, 5, 17, 41]),
             ('wiki/Spectrogram', [1, 2, 4, 7]),)
+
         for path, expected in test_cases:
             with self.subTest(path=path, expected=expected):
                 self.assertEqual(parse(path), expected)
 
 
+
+
+
 if __name__ == '__main__':
-    # unittest.main()
-    result = build_bridge('wiki/', 'The_New_York_Times', 'Stone_Age')
-    result1 = get_statistics('wiki/', 'The_New_York_Times', "Binyamina_train_station_suicide_bombing")
-    print(result)
-    print(result1)
-    # print('Stone_Age' in os.listdir('wiki'))
-    # print(create_tree('wiki', None, None))
+    f = 'wiki/Quantum_counting_algorithm'
+    print(parse(f))
+
+
