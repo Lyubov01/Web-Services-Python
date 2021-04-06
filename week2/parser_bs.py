@@ -156,6 +156,7 @@ def build_bridge(path, start_page, end_page):
             bridge.append(lv)
             pos -= 1
             break
+    bridge.reverse()
     return bridge
 
 
